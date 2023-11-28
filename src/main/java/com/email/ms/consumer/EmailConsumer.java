@@ -17,15 +17,17 @@ public class EmailConsumer {
       @Autowired
      final private EmailService emailService;
 
+    /**
+     * Aqui recebemos os dados do RabbitMQ
+     * MessageWrapper contem dois objetos, o Email e o HtmlSettings que são configurações do html do email
+     *
+     * @param messageWrapper
+     */
+
 
     @RabbitListener(queues = "${broker.queue.email.name}")
-    public void listenEmailQueue(@Payload EmailRecordDTO emailRecordDTO){
-
-         var emailModel = new EmailModel();
-        BeanUtils.copyProperties(emailRecordDTO, emailModel);
-
-        emailService.sendEmail(emailModel);
-
-      //  System.out.println(emailRecordDTO.emailTo());
+    public void listenEmailQueue(@Payload MessageWrapper messageWrapper){
+        emailService.sendEmail(messageWrapper);
     }
-}
+
+    }
